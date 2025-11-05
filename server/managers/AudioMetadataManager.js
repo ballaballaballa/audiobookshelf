@@ -13,7 +13,7 @@ const fileUtils = require('../utils/fileUtils')
  * @property {boolean} [backup=false] - Whether to backup the files.
  */
 
-class AudioMetadataMangaer {
+class AudioMetadataManager {
   constructor() {
     this.itemsCacheDir = Path.join(global.MetadataPath, 'cache/items')
 
@@ -286,4 +286,4 @@ class AudioMetadataMangaer {
     }
   }
 }
-module.exports = AudioMetadataMangaer
+module.exports = AudioMetadataManager

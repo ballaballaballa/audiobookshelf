@@ -64,16 +64,9 @@ class LocalAuthStrategy {
 
     // Check passwordless root user
     if (user.type === 'root' && !user.pash) {
-      if (password) {
-        // deny login
-        this.logFailedLoginAttempt(req, user.username, 'Root user has no password set')
-        done(null, null)
-        return
-      }
-      // approve login
-      Logger.info(`[LocalAuth] User "${user.username}" logged in from ip ${requestIp.getClientIp(req)}`)
-
-      done(null, user)
+      // SECURITY FIX: Never allow passwordless root login
+      this.logFailedLoginAttempt(req, user.username, 'Root user must have a password set')
+      done(null, null)
       return
     } else if (!user.pash) {
       this.logFailedLoginAttempt(req, user.username, 'User has no password set. Might have been created with OpenID')
@@ -131,7 +124,7 @@ class LocalAuthStrategy {
    * @returns {Promise<boolean>}
    */
   comparePassword(password, user) {
-    if (user.type === 'root' && !password && !user.pash) return true
+    // SECURITY FIX: Remove special case for root passwordless login
     if (!password || !user.pash) return false
     return bcrypt.compare(password, user.pash)
   }
